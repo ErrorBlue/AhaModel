@@ -28,3 +28,7 @@ deploy = ["vllm"]
 
 [tool.setuptools.packages.find]
 include = ["ahamodel*"]
+
+[tool.pytest.ini_options]
+# 不在项目目录生成 .pytest_cache（避免被文件监听器/编辑器 stat 时触发 EPERM）
+addopts = "-p no:cacheprovider"

@@ -14,6 +14,7 @@ venv/
 *.log
 
 # 训练产物（全部由脚本生成，不入库）
-data/
-checkpoints/
-results/
+# 注意：必须用 / 锚定到仓库根目录，否则会误屏蔽 ahamodel/data/ 等源码目录
+/data/
+/checkpoints/
+/results/

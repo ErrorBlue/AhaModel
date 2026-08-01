@@ -16,7 +16,7 @@ tokenizer 导出会把自写 BPE 转成标准 `tokenizer.json`（GPT-2 字节映
 ## 2. 启动服务
 
 ```bash
-# 方式一：直接跑（tmux 里）
+# 方式一：直接跑（建议用 tmux 或 systemd 托管，见第 4 节）
 bash deploy/vllm_serve.sh checkpoints/hf 8000
 
 # 方式二：Docker（NVIDIA Container Toolkit 已装）

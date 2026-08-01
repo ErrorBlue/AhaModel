@@ -5,7 +5,9 @@ set -euo pipefail
 
 echo "==> 基础工具"
 sudo apt-get update
-sudo apt-get install -y build-essential git curl tmux htop unzip
+sudo apt-get install -y build-essential git curl htop unzip
+# tmux 为可选推荐项（长训练时方便断线续看），不装也能用 nohup 跑训练，见 docs/00
+sudo apt-get install -y tmux || echo "tmux 未安装（可选）"
 
 echo "==> 安装 uv（Python 环境管理）"
 if ! command -v uv >/dev/null 2>&1; then
@@ -13,14 +15,14 @@ if ! command -v uv >/dev/null 2>&1; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
-echo "==> 创建 Python 3.11 虚拟环境"
-uv python install 3.11
-uv venv .venv --python 3.11
+echo "==> 创建 Python 3.12 虚拟环境"
+uv python install 3.12
+uv venv .venv --python 3.12
 source .venv/bin/activate
 
-echo "==> 安装 PyTorch（CUDA 12.4）与项目依赖"
+echo "==> 安装 PyTorch（CUDA 12.8）与项目依赖"
 pip install --upgrade pip
-pip install torch --index-url https://download.pytorch.org/whl/cu124
+pip install torch --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
 
 echo "==> 安装 vLLM（推理部署）"
@@ -38,4 +40,7 @@ cat <<'EOF'
   2) 长训练请用 tmux 包裹:
      tmux new -s train
      python scripts/03_pretrain.py --use-logger swanlab
+     没有 tmux 时的等价做法（后台 + 日志）:
+     nohup python scripts/03_pretrain.py --use-logger swanlab > logs/pretrain.log 2>&1 &
+     tail -f logs/pretrain.log
 EOF

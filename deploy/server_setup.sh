@@ -31,6 +31,6 @@ cat <<'EOF'
   1) 数据下载（国内服务器如无法直连 HF）:
      export HF_ENDPOINT=https://hf-mirror.com
      python scripts/02_prepare_data.py --stage all
-  2) 训练（后台运行可自行加 nohup/日志重定向）:
+  2) 训练:
      python scripts/03_pretrain.py --use-logger swanlab
 EOF

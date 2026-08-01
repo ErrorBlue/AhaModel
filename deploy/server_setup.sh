@@ -30,7 +30,7 @@ cat <<'EOF'
 完成。下一步：
   1) 数据下载（国内服务器如无法直连 HF）:
      export HF_ENDPOINT=https://hf-mirror.com
-     python scripts/02_prepare_data.py --stage all
+     python scripts/01_prepare_data.py --stage all
   2) 训练:
      python scripts/03_pretrain.py --use-logger swanlab
 EOF

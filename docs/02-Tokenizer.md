@@ -1,4 +1,4 @@
-# 01 Tokenizer：手写字节级 BPE
+# 02 Tokenizer：手写字节级 BPE
 
 ## 1. 为什么需要 tokenizer
 
@@ -42,12 +42,15 @@
 
 ## 4. 运行
 
+> 顺序提醒：先跑 `scripts/01_prepare_data.py` 准备好清洗后的语料，
+> 词表是基于这份语料训练的。
+
 ```bash
 # 用清洗后的语料训练（词表默认 6400）
-python scripts/01_train_tokenizer.py --corpus data/pretrain.jsonl --vocab-size 6400
+python scripts/02_train_tokenizer.py --corpus data/pretrain.jsonl --vocab-size 6400
 
 # 顺便导出 HF 格式（vLLM/评测要用）
-python scripts/01_train_tokenizer.py --export-hf checkpoints/hf
+python scripts/02_train_tokenizer.py --export-hf checkpoints/hf
 ```
 
 产物 `data/tokenizer.json`：特殊 token（`<|pad|> <|unk|> <|bos|> <|eos|> <|system|> <|user|> <|assistant|>`）

@@ -42,7 +42,7 @@ def main():
     trainer = Trainer(model, cfg, device)
     data_file = Path(cfg.data_dir) / "dpo.jsonl"
     if not data_file.exists():
-        sys.exit(f"缺少 {data_file}，请先运行 scripts/02_prepare_data.py --stage dpo")
+        sys.exit(f"缺少 {data_file}，请先运行 scripts/01_prepare_data.py --stage dpo")
     ds = DpoDataset(tok, data_file, cfg.max_seq_len, cfg.max_samples)
     loader = DataLoader(ds, batch_size=cfg.batch_size, shuffle=True, collate_fn=lambda b: collate_dpo(b, tok.pad_id or 0))
 

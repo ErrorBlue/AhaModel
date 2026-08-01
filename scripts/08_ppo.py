@@ -52,7 +52,7 @@ def main():
 
     data_file = Path(cfg.data_dir) / "rlaif.jsonl"
     if not data_file.exists():
-        sys.exit(f"缺少 {data_file}，请先运行 scripts/02_prepare_data.py --stage rlaif")
+        sys.exit(f"缺少 {data_file}，请先运行 scripts/01_prepare_data.py --stage rlaif")
     ds = RolloutDataset(tok, data_file, cfg.max_seq_len, cfg.max_samples)
     prompts = [ds[i] for i in range(min(len(ds), cfg.n_rollout_prompts))]
     print(f"rollout 提示词数量: {len(prompts)}")

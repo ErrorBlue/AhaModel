@@ -17,8 +17,8 @@
 | 步骤 | 脚本 | 文档 | 产物 |
 | --- | --- | --- | --- |
 | 环境搭建 | `deploy/server_setup.sh` | [docs/00](docs/00-环境搭建.md) | 服务器环境 |
-| Tokenizer | `scripts/01_train_tokenizer.py` | [docs/01](docs/01-Tokenizer.md) | `data/tokenizer.json` |
-| 数据准备 | `scripts/02_prepare_data.py` | [docs/03](docs/03-数据清洗.md) | `data/{pretrain,sft,dpo,rlaif}.jsonl` |
+| 数据准备 | `scripts/01_prepare_data.py` | [docs/01](docs/01-数据准备与清洗.md) | `data/{pretrain,sft,dpo,rlaif}.jsonl` |
+| Tokenizer | `scripts/02_train_tokenizer.py` | [docs/02](docs/02-Tokenizer.md) | `data/tokenizer.json` |
 | 预训练 | `scripts/03_pretrain.py` | [docs/04](docs/04-预训练.md) | `checkpoints/pretrain/` |
 | SFT | `scripts/04_sft.py` | [docs/05](docs/05-SFT与LoRA.md) | `checkpoints/sft/` |
 | LoRA 微调 | `scripts/05_lora.py` | [docs/05](docs/05-SFT与LoRA.md) | `checkpoints/lora_merged.pt` |
@@ -37,11 +37,11 @@
 bash deploy/server_setup.sh
 pip install -e .
 
-# 1. 下载数据（国内服务器：export HF_ENDPOINT=https://hf-mirror.com）
-python scripts/02_prepare_data.py --stage all
+# 1. 下载并清洗数据（国内服务器：export HF_ENDPOINT=https://hf-mirror.com）
+python scripts/01_prepare_data.py --stage all
 
-# 2. 训练 tokenizer（真实语料建议 --sample 200000）
-python scripts/01_train_tokenizer.py
+# 2. 基于清洗后的语料训练 tokenizer（真实语料建议 --sample 200000）
+python scripts/02_train_tokenizer.py
 
 # 3. 预训练 -> SFT（先 --smoke 验证全链路，再正式跑）
 python scripts/03_pretrain.py --smoke

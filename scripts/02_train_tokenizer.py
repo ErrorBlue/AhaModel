@@ -1,4 +1,4 @@
-"""步骤 1：训练字节级 BPE tokenizer。"""
+"""步骤 2：训练字节级 BPE tokenizer（语料来自 scripts/01_prepare_data.py）。"""
 
 import argparse
 import json
@@ -22,7 +22,7 @@ def main():
 
     corpus = Path(args.corpus)
     if not corpus.exists():
-        sys.exit(f"找不到语料 {corpus}，请先运行 scripts/02_prepare_data.py")
+        sys.exit(f"找不到语料 {corpus}，请先运行 scripts/01_prepare_data.py")
 
     texts = []
     with open(corpus, "r", encoding="utf-8") as f:

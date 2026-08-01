@@ -1,4 +1,8 @@
-"""步骤 2：下载并准备各阶段数据（minimind 开源数据集 + 维基中文清洗教学路径）。"""
+"""步骤 1：下载并准备各阶段数据（minimind 开源数据集 + 维基中文清洗教学路径）。
+
+流程顺序：数据准备与清洗（本步）→ Tokenizer 训练（scripts/02）→ 预训练。
+词表必须基于清洗后的真实语料训练，所以本步在最前。
+"""
 
 import argparse
 import sys
@@ -33,7 +37,7 @@ def main():
         if s == "pretrain":
             # 自动留出 1000 行做 PPL 评测（与训练文件不重叠）
             split_eval_set(data_dir / "pretrain.jsonl", data_dir / "pretrain_eval.jsonl", n=1000)
-    print("数据准备完成。教学路径（自制语料）见 docs/03-数据清洗.md")
+    print("数据准备完成。教学路径（自制语料）见 docs/01-数据准备与清洗.md")
 
 
 if __name__ == "__main__":

@@ -37,7 +37,7 @@ def main():
     trainer = Trainer(model, cfg, device)
     data_file = Path(cfg.data_dir) / "sft.jsonl"
     if not data_file.exists():
-        sys.exit(f"缺少 {data_file}，请先运行 scripts/02_prepare_data.py --stage sft")
+        sys.exit(f"缺少 {data_file}，请先运行 scripts/01_prepare_data.py --stage sft")
     ds = SftDataset(tok, data_file, cfg.max_seq_len, cfg.max_samples)
     loader = DataLoader(
         ds,

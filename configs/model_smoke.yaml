@@ -1,0 +1,14 @@
+# --smoke 用的微型配置：CPU 上 2 分钟内跑通全流程
+name: ahamodel-smoke
+vocab_size: 6400
+d_model: 128
+n_layers: 2
+q_heads: 4
+kv_heads: 2
+intermediate_size: 512
+max_seq_len: 128
+rope_theta: 10000.0
+rms_norm_eps: 1.0e-6
+dropout: 0.0
+tie_embeddings: false
+rope_scaling: null

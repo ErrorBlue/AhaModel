@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ahamodel"
+version = "0.1.0"
+description = "从零构建 LLM 全流程教学项目（Tokenizer / Transformer / Pretrain / SFT / LoRA / DPO / PPO / GRPO / Eval / vLLM）"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.1",
+    "numpy",
+    "pyyaml",
+    "tqdm",
+    "huggingface_hub",
+    "datasets",
+    "tokenizers",
+    "transformers",
+    "safetensors",
+    "tensorboard",
+    "requests",
+]
+
+[project.optional-dependencies]
+train = ["swanlab", "wandb"]
+test = ["pytest"]
+deploy = ["vllm"]
+
+[tool.setuptools.packages.find]
+include = ["ahamodel*"]

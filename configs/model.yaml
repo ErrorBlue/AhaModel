@@ -1,0 +1,14 @@
+# 默认 64M 配置（对齐 minimind-3 已验证规模；4090 上预训练 1 epoch 约 1~2h）
+name: ahamodel-64m
+vocab_size: 6400
+d_model: 768
+n_layers: 8
+q_heads: 8
+kv_heads: 4
+intermediate_size: 2048
+max_seq_len: 768
+rope_theta: 10000.0
+rms_norm_eps: 1.0e-6
+dropout: 0.0
+tie_embeddings: false
+rope_scaling: null

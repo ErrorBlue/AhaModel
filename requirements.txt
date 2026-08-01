@@ -1,0 +1,21 @@
+# 核心依赖（Linux 环境）
+torch>=2.1
+numpy
+pyyaml
+tqdm
+huggingface_hub
+datasets
+tokenizers
+transformers
+safetensors
+tensorboard
+requests
+
+# 训练可视化（可选）
+swanlab
+
+# 测试
+pytest
+
+# 部署（仅 Linux；4090 服务器上安装）
+# vllm>=0.6

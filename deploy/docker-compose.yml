@@ -1,0 +1,22 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    command:
+      - --model
+      - /model
+      - --served-model-name
+      - ahamodel
+      - --max-model-len
+      - "1024"
+      - --enforce-eager
+    volumes:
+      - ../checkpoints/hf:/model
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

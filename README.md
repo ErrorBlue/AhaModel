@@ -30,11 +30,12 @@
 | 导出 HF | `scripts/11_export_hf.py` | [docs/10](docs/10-部署vLLM.md) | `checkpoints/hf/` |
 | vLLM 部署 | `scripts/12_deploy_vllm.py` | [docs/10](docs/10-部署vLLM.md) | OpenAI API 服务 |
 
-## 快速开始（4090 服务器）
+## 快速开始
+
+数据准备与 tokenizer 两条路径共用，先准备一次（需要联网下载数据）：
 
 ```bash
-# 0. 环境（Ubuntu + NVIDIA 驱动）
-bash deploy/server_setup.sh
+# 0. 安装项目（两条路径都需执行一次）
 pip install -e .
 
 # 1. 下载并清洗数据（国内服务器：export HF_ENDPOINT=https://hf-mirror.com）
@@ -42,25 +43,61 @@ python scripts/01_prepare_data.py --stage all
 
 # 2. 基于清洗后的语料训练 tokenizer（真实语料建议 --sample 200000）
 python scripts/02_train_tokenizer.py
+```
 
-# 3. 预训练 -> SFT（先 --smoke 验证全链路，再正式跑）
-python scripts/03_pretrain.py --smoke
+之后按目标二选一。
+
+### 方案 A：CPU smoke —— 几分钟验证全链路
+
+`--smoke` 把模型缩到 2 层 / 128 维、数据限制 200 条、每阶段只跑 6 步，配合 `--device cpu`
+可在无 GPU 的机器上几分钟跑通 预训练 → SFT → LoRA → DPO → RM → PPO → GRPO → 评测 → 导出。
+vLLM 部署仅支持 GPU/Linux，本路径止步于 HF 导出（产物可用 transformers 加载验证）。
+
+```bash
+# 预训练 -> SFT -> LoRA
+python scripts/03_pretrain.py --smoke --device cpu
+python scripts/04_sft.py --smoke --device cpu --model-path checkpoints/pretrain/latest.pt
+python scripts/05_lora.py --smoke --device cpu --model-path checkpoints/sft/latest.pt
+
+# 对齐与 RL
+python scripts/06_dpo.py --smoke --device cpu --model-path checkpoints/sft/latest.pt
+python scripts/07_rm.py --smoke --device cpu --model-path checkpoints/sft/latest.pt
+python scripts/08_ppo.py --smoke --device cpu --model-path checkpoints/sft/latest.pt --rm-path checkpoints/rm/latest.pt
+python scripts/09_grpo.py --smoke --device cpu --model-path checkpoints/sft/latest.pt
+
+# 评测与导出（--smoke/--device 需放在 eval 子命令 samples 之前）
+python scripts/10_eval.py --smoke --device cpu samples --model-path checkpoints/sft/latest.pt --chat
+python scripts/11_export_hf.py --model-path checkpoints/sft/latest.pt
+```
+
+### 方案 B：GPU 正式训练（4090 服务器，半天跑完）
+
+默认 64M 模型 + minimind 数据集，约 1~2h 预训练、1~2h SFT、其余各 0.5~1h。
+
+```bash
+# 环境（Ubuntu + NVIDIA 驱动）
+bash deploy/server_setup.sh
+
+# 预训练 -> SFT -> LoRA
+python scripts/03_pretrain.py
 python scripts/04_sft.py --model-path checkpoints/pretrain/latest.pt
+python scripts/05_lora.py --model-path checkpoints/sft/latest.pt
 
-# 4. 对齐与 RL
+# 对齐与 RL
 python scripts/06_dpo.py --model-path checkpoints/sft/latest.pt
 python scripts/07_rm.py --model-path checkpoints/sft/latest.pt
 python scripts/08_ppo.py --model-path checkpoints/sft/latest.pt --rm-path checkpoints/rm/latest.pt
 python scripts/09_grpo.py --model-path checkpoints/sft/latest.pt
 
-# 5. 评测与部署
+# 评测与部署
 python scripts/10_eval.py samples --model-path checkpoints/sft/latest.pt --chat
 python scripts/11_export_hf.py --model-path checkpoints/sft/latest.pt
 bash deploy/vllm_serve.sh
 python scripts/12_deploy_vllm.py --action client
 ```
 
-想最快验证全流程？`--smoke` 模式把模型缩到 2 层 / 128 维、数据限制 200 条，CPU 上几分钟跑通。
+注意：模型规模由 checkpoint 决定，两条路径不要混用——用 smoke 预训练产物接正式 SFT
+得到的仍是小模型；正式训练需从 `python scripts/03_pretrain.py`（不带 `--smoke`）开始。
 
 ## 项目结构
 

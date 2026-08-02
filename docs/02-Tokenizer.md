@@ -67,6 +67,17 @@ python scripts/02_train_tokenizer.py --export-hf checkpoints/hf
 - **解码乱码**：UTF-8 多字节字符可能被拆到相邻 token，解码时先拼字节再统一 decode（代码已处理）；
 - **模型词表和 tokenizer 不一致**：训练脚本会自动把 `model_cfg.vocab_size` 对齐到 tokenizer 实际词表。
 
+## Smoke 测试与正式运行
+
+- **Smoke（快速验证）**：`python scripts/02_train_tokenizer.py --vocab-size 400 --sample 300`
+  —— 小词表小样本，几秒跑通；
+- **正式（4090）**：`python scripts/02_train_tokenizer.py --vocab-size 6400 --sample 200000`
+  —— 基于清洗后的语料训练完整词表。
+
+**阶段产物**：
+- `data/tokenizer.json`：自写 tokenizer（特殊 token + BPE merges），后续所有阶段依赖；
+- 可选：`--export-hf checkpoints/hf` 导出的 HF 兼容 tokenizer 文件。
+
 ## 扩展思路
 
 - 用 `tokenizers` 库同语料训练并对比词表/压缩率；

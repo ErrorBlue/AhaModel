@@ -42,6 +42,13 @@ python scripts/06_dpo.py --model-path checkpoints/sft/latest.pt
 - **chosen/rejected 长度差异**：logp 按整段求和，长度差异过大会干扰，可按长度分桶；
 - **数据质量**：偏好数据噪声比数量更重要，先人工看 100 条。
 
+## Smoke 测试与正式运行
+
+- **Smoke（快速验证）**：`python scripts/06_dpo.py --smoke --run-name dpo-smoke --model-path checkpoints/sft/latest.pt`
+- **正式（4090）**：`python scripts/06_dpo.py --model-path checkpoints/sft/latest.pt --use-logger swanlab`
+
+**阶段产物**：`checkpoints/dpo/latest.pt`（偏好对齐后的策略权重）。
+
 ## 扩展思路
 
 - 实现 IPO/SimPO 对比（改公式一行即可）；

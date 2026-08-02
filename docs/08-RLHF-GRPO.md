@@ -49,6 +49,13 @@ python scripts/09_grpo.py --model-path checkpoints/sft/latest.pt
 - 数学题正确率上升曲线；
 - 输出多样性（KL 惩罚相同的前提下）。
 
+## Smoke 测试与正式运行
+
+- **Smoke（快速验证）**：`python scripts/09_grpo.py --smoke --run-name grpo-smoke --model-path checkpoints/sft/latest.pt`
+- **正式（4090）**：`python scripts/09_grpo.py --model-path checkpoints/sft/latest.pt --use-logger swanlab`
+
+**阶段产物**：`checkpoints/grpo/latest.pt`（GRPO 训练后的策略权重）。
+
 ## 扩展思路
 
 - 把规则奖励换成代码执行（`exec` 沙箱）验证输出；

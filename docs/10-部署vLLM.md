@@ -63,6 +63,25 @@ WantedBy=multi-user.target
   （transformers 加载后对比 logits，容差 1e-4）；
 - **输出不遵循聊天格式**：确认 client 走 `/chat/completions`（应用 chat_template）。
 
+## Smoke 测试与正式运行
+
+- **Smoke（快速验证）**：
+  ```bash
+  python scripts/11_export_hf.py --model-path checkpoints/sft/latest.pt --out-dir checkpoints/hf-smoke
+  python deploy/client.py --base-url http://127.0.0.1:8000/v1 --prompt "你好"   # 服务启动后单轮对话
+  ```
+- **正式（4090）**：
+  ```bash
+  python scripts/11_export_hf.py --model-path checkpoints/sft/latest.pt
+  bash deploy/vllm_serve.sh checkpoints/hf 8000
+  python scripts/12_deploy_vllm.py --action client
+  ```
+
+**阶段产物**（`checkpoints/hf/`，vLLM 可直接加载的模型目录）：
+- `config.json`（LlamaConfig）、`model.safetensors`；
+- `tokenizer.json` + `tokenizer_config.json` + `special_tokens_map.json`；
+- `generation_config.json`。
+
 ## 扩展思路
 
 - 量化（GPTQ/AWQ）与 GGUF/Ollama 部署；

@@ -70,6 +70,20 @@ rollout 数据来自 `rlaif.jsonl`（对话最后一条是空 assistant，模型
 - **loss 波动大**：`clip_eps` 调小、`lr` 调小、rollout 数量加大；
 - **RM 过拟合**：RM 训练与验证分开，PPO 阶段 RM 必须冻结。
 
+## Smoke 测试与正式运行
+
+RM（奖励模型）：
+- **Smoke**：`python scripts/07_rm.py --smoke --run-name rm-smoke --model-path checkpoints/sft/latest.pt`
+- **正式**：`python scripts/07_rm.py --model-path checkpoints/sft/latest.pt --use-logger swanlab`
+
+PPO：
+- **Smoke**：`python scripts/08_ppo.py --smoke --run-name ppo-smoke --model-path checkpoints/sft/latest.pt --rm-path checkpoints/rm/latest.pt`
+- **正式**：`python scripts/08_ppo.py --model-path checkpoints/sft/latest.pt --rm-path checkpoints/rm/latest.pt --use-logger swanlab`
+
+**阶段产物**：
+- `checkpoints/rm/latest.pt`：奖励模型权重；
+- `checkpoints/ppo/latest.pt`：PPO 训练后的 actor 权重（含 critic 状态）。
+
 ## 扩展思路
 
 - 用 PPO 与 DPO 训同一批偏好数据，对比生成质量与训练稳定性；

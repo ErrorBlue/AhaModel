@@ -45,6 +45,20 @@ python scripts/05_lora.py --model-path checkpoints/pretrain/latest.pt
   或者用 `lora_merged.pt`；
 - **r 越大越好？** 不一定，大 r 增加过拟合风险，16~64 是常见区间。
 
+## Smoke 测试与正式运行
+
+SFT（全参微调）：
+- **Smoke**：`python scripts/04_sft.py --smoke --run-name sft-smoke`
+- **正式**：`python scripts/04_sft.py --model-path checkpoints/pretrain/latest.pt --use-logger swanlab`
+
+LoRA 微调：
+- **Smoke**：`python scripts/05_lora.py --smoke --run-name lora-smoke --model-path checkpoints/pretrain/latest.pt`
+- **正式**：`python scripts/05_lora.py --model-path checkpoints/pretrain/latest.pt`
+
+**阶段产物**：
+- `checkpoints/sft/latest.pt`：全参 SFT 权重；
+- `checkpoints/lora/latest.pt` + `checkpoints/lora_merged.pt`：LoRA 权重与合并后的干净权重（可直接用于 DPO/导出）。
+
 ## 扩展思路
 
 - 对比 LoRA 与全参 SFT 在固定评测集上的分数；
